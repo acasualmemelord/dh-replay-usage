@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="style.css">
+  <title>DragonHeaven HTML Replay Calculator</title>
+</head>
+<body>
+  <div class="top">
+    <center>
+      <h1>DragonHeaven HTML Replay Stats Calculator</h1>
+    </center>
+  </div>
+  <div class="files">
+    <p>Submit the HTML files:</p>
+    <input type="file" id="file" name="file[]" multiple>
+    <script>
+      const fileSelector = document.getElementById('file');
+      fileSelector.addEventListener('change', (event) => {
+        const fileList = event.target.files;
+        submit(fileList);
+      });
+    </script>
+  </div>
+  <div style="width: 100%;">
+  <div style="display: flex; align-items: flex-start;">
+    <div>
+        <p id="list"></p><br>
+    </div>
+    <div>
+        <table id="table"></table>
+    </div>
+  </div>
+</div>
+  <script src="script.js"></script>
+</body>
+</html>
