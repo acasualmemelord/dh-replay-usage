@@ -79,9 +79,11 @@ function submit(fileList) {
       //find player1 and player2 mons
       j = 0;
       while (contents.indexOf("poke|", j + 1) > -1) {
-        j = contents.indexOf("poke|", j + 1);
-
-        let temp = contents.substring(j + 8, contents.indexOf(",", j + 1));
+        j = contents.indexOf("poke|", j + 1); //poke
+        j = contents.indexOf("|", j + 1); //p1
+        j = contents.indexOf("|", j + 1); //pokemon
+        let temp = contents.substring(j + 1, contents.indexOf("|", j + 1));
+        if (temp.includes(",")) temp = temp.substring(0, temp.length - 3);
         let temp2 = contains(poke, temp, 0);
         let temp3;
 
