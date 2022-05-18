@@ -70,7 +70,7 @@ function calcPreview (fileList){
 
         cell1.innerHTML = poke[l][0];
         cell2.innerHTML = poke[l][1];
-        cell3.innerHTML = Math.round(poke[l][1] / pokeTotal * 10000) / 100 + "%";
+        cell3.innerHTML = Math.round(poke[l][1] / (players1.length + players2.length) * 10000) / 100 + "%";
         cell4.innerHTML = Math.round(poke[l][2] / poke[l][1] * 10000) / 100 + "%";
       }
 
