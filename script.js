@@ -74,9 +74,10 @@ function calcPreview (fileList){
 
         let mega = contents.substring(l + 1, j);
         let base = mega.substring(0, mega.lastIndexOf("-"));
+        if (base.indexOf("Mega") != -1) base = base.substring(0, base.length - 5);
         let player = (k == 'p1') ? p1 : p2;
 
-        console.log(mega + " used by " + player);
+        //console.log(mega + " used by " + player);
         poke = removeOne(poke, base);
         pushMon(poke, mega, k, p1w);
       }
@@ -170,8 +171,10 @@ function calcNoPreview (fileList){
 
 function removeOne(arr, mon) {
   let i = contains(arr, mon, 0);
-  //console.log(arr[i]);
-  if(arr[i][1] == 1) arr.splice(i, 1);
+  console.log(mon + " " + i + " " + arr[i]);
+  if(arr[i][1] == 1) {
+    arr.splice(i, 1);
+  }
   else arr[i][1] --;
   return arr;
 }
