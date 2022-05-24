@@ -14,13 +14,6 @@ function submit(fileList) {
   else calcPreview(fileList);
 }
 
-function contains (arr, val, index) {
-  for (let i = 0; i < arr.length; i ++){
-    if (arr[i][index] == val) return i;
-  }
-  return -1;
-}
-
 function calcPreview (fileList){
   let p1, p2, total;
   let p1w;
@@ -33,49 +26,7 @@ function calcPreview (fileList){
   function readFile(i) {
     //setup replays
     if(i >= fileList.length){
-      for (let k = 0; k < players1.length; k ++){
-        document.getElementById('list').innerHTML += players1[k] + " VS. " + players2[k] + "<br>";
-      }
-
-      //create usage table
-      let pokeTotal = arrTotal(poke);
-      poke.sort((a,b) => b[1] - a[1]);
-
-      let tbl = document.createElement("table");
-      let tblHead = document.createElement("thead");
-      let mon = document.createElement('th');
-      mon.innerHTML = "Pokemon";
-      let use = document.createElement('th');
-      use.innerHTML = "Use";
-      let useP = document.createElement('th');
-      useP.innerHTML = "Usage %";
-      let win = document.createElement('th');
-      win.innerHTML = "Winrate %";
-
-      tblHead.appendChild(mon);
-      tblHead.appendChild(use);
-      tblHead.appendChild(useP);
-      tblHead.appendChild(win);
-      tbl.appendChild(tblHead);
-
-      let tblBody = document.createElement("tbody");
-      let table = document.getElementById("table");
-      for (let l = 0; l < poke.length; l ++){
-        let row = table.insertRow(-1);
-
-        let cell1 = row.insertCell(0);
-        let cell2 = row.insertCell(1);
-        let cell3 = row.insertCell(2);
-        let cell4 = row.insertCell(3);
-
-        cell1.innerHTML = poke[l][0];
-        cell2.innerHTML = poke[l][1];
-        cell3.innerHTML = Math.round(poke[l][1] / (players1.length + players2.length) * 10000) / 100 + "%";
-        cell4.innerHTML = Math.round(poke[l][2] / poke[l][1] * 10000) / 100 + "%";
-      }
-
-      table = tbl;
-
+      setTable(poke, players1, players2);
       return;
     }
 
@@ -90,7 +41,7 @@ function calcPreview (fileList){
       p2 = contents.substring(j + 3, contents.indexOf("|", j + 4));
 
       //determine who won
-      j = contents.indexOf("win");
+      j = contents.indexOf("win|");
       if(contents.substring(j + 4, contents.indexOf("\n", j)) === p1) p1w = true;
       else p1w = false;
 
@@ -102,28 +53,33 @@ function calcPreview (fileList){
       while (contents.indexOf("poke|", j + 1) > -1) {
         j = contents.indexOf("poke|", j + 1); //poke
         j = contents.indexOf("|", j + 1); //p1
+        let k = j;
         j = contents.indexOf("|", j + 1); //pokemon
         let temp = contents.substring(j + 1, contents.indexOf("|", j + 1));
         if (temp.includes(",")) temp = temp.substring(0, temp.length - 3);
-        let temp2 = contains(poke, temp, 0);
-        let temp3;
-
-        //push pokemon, usage, and win amount
-        if (contents.substring(j + 5, j + 7) == "p1"){
-          if (p1w) temp3 = 1;
-          else temp3 = 0;
-        } else {
-          if (!p1w) temp3 = 1;
-          else temp3 = 0;
-        }
-
-        if (temp2 == -1) poke.push([temp, 1, temp3]);
-        else {
-          poke[temp2][1] ++;
-          poke[temp2][2] += temp3;
-        }
+        let temp2 = contents.substring(k + 1, k + 3);
+        pushMon(poke, temp, temp2, p1w);
       }
 
+      //change base into mega
+      j = 0;
+      while (contents.indexOf("detailschange|", j + 1) > -1) {
+        j = contents.indexOf("detailschange|", j + 1); //detailschange
+        j = contents.indexOf("|", j + 1); //p: base
+        let k = contents.substring(j + 1, j + 3); //player
+        j = contents.indexOf("|", j + 1); //mega
+        let l = j;
+        j = contents.indexOf("\n", j + 1); //newline
+        if (contents.substring(l, j).indexOf(",") != -1) j -= 3;
+
+        let mega = contents.substring(l + 1, j);
+        let base = mega.substring(0, mega.lastIndexOf("-"));
+        let player = (k == 'p1') ? p1 : p2;
+
+        console.log(mega + " used by " + player);
+        poke = removeOne(poke, base);
+        pushMon(poke, mega, k, p1w);
+      }
       readFile(i + 1);
     }
     fr.readAsText(file);
@@ -143,49 +99,7 @@ function calcNoPreview (fileList){
   function readFile(i) {
     //setup replays
     if(i >= fileList.length){
-      for (let k = 0; k < players1.length; k ++){
-        document.getElementById('list').innerHTML += players1[k] + " VS. " + players2[k] + "<br>";
-      }
-
-      //create usage table
-      let pokeTotal = arrTotal(poke);
-      poke.sort((a,b) => b[1] - a[1]);
-
-      let tbl = document.createElement("table");
-      let tblHead = document.createElement("thead");
-      let mon = document.createElement('th');
-      mon.innerHTML = "Pokemon";
-      let use = document.createElement('th');
-      use.innerHTML = "Use";
-      let useP = document.createElement('th');
-      useP.innerHTML = "Usage %";
-      let win = document.createElement('th');
-      win.innerHTML = "Winrate %";
-
-      tblHead.appendChild(mon);
-      tblHead.appendChild(use);
-      tblHead.appendChild(useP);
-      tblHead.appendChild(win);
-      tbl.appendChild(tblHead);
-
-      let tblBody = document.createElement("tbody");
-      let table = document.getElementById("table");
-      for (let l = 0; l < poke.length; l ++){
-        let row = table.insertRow(-1);
-
-        let cell1 = row.insertCell(0);
-        let cell2 = row.insertCell(1);
-        let cell3 = row.insertCell(2);
-        let cell4 = row.insertCell(3);
-
-        cell1.innerHTML = poke[l][0];
-        cell2.innerHTML = poke[l][1];
-        cell3.innerHTML = Math.round(poke[l][1] / (players1.length + players2.length) * 10000) / 100 + "%";
-        cell4.innerHTML = Math.round(poke[l][2] / poke[l][1] * 10000) / 100 + "%";
-      }
-
-      table = tbl;
-
+      setTable(poke, players1, players2);
       return;
     }
 
@@ -221,6 +135,7 @@ function calcNoPreview (fileList){
         if (temp.includes(",")) temp = temp.substring(0, temp.length - 3);
         let temp2 = contains(poke, temp, 0);
         let temp3;
+        let temp5;
 
         j = contents.indexOf("|", j + 1); //hp
         let line = contents.substring(k, j);
@@ -228,10 +143,13 @@ function calcNoPreview (fileList){
           lines.push([line]);
 
           //push pokemon, usage, and win amount
+          //console.log(temp + ": " + p1 + " vs. " + p2 + ": " + temp4);
           if (temp4 == "p1"){
+            //temp5 = p1;
             if (p1w) temp3 = 1;
             else temp3 = 0;
           } else {
+            //temp5 = p2;
             if (!p1w) temp3 = 1;
             else temp3 = 0;
           }
@@ -241,7 +159,6 @@ function calcNoPreview (fileList){
             poke[temp2][1] ++;
             poke[temp2][2] += temp3;
           }
-          doPush = false;
         }
       }
       readFile(i + 1);
@@ -251,10 +168,90 @@ function calcNoPreview (fileList){
   readFile(0);
 }
 
+function removeOne(arr, mon) {
+  let i = contains(arr, mon, 0);
+  //console.log(arr[i]);
+  if(arr[i][1] == 1) arr.splice(i, 1);
+  else arr[i][1] --;
+  return arr;
+}
+
 function arrTotal (arr) {
   let result = 0;
   for (let i = 0; i < arr.length; i ++){
     result += arr[i][1];
   }
   return result;
+}
+
+function setTable (poke, players1, players2) {
+  for (let k = 0; k < players1.length; k ++){
+    document.getElementById('list').innerHTML += players1[k] + " VS. " + players2[k] + "<br>";
+  }
+
+  //create usage table
+  let pokeTotal = arrTotal(poke);
+  poke.sort((a,b) => b[1] - a[1]);
+
+  let tbl = document.createElement("table");
+  let tblHead = document.createElement("thead");
+  let mon = document.createElement('th');
+  mon.innerHTML = "Pokemon";
+  let use = document.createElement('th');
+  use.innerHTML = "Use";
+  let useP = document.createElement('th');
+  useP.innerHTML = "Usage %";
+  let win = document.createElement('th');
+  win.innerHTML = "Winrate %";
+
+  tblHead.appendChild(mon);
+  tblHead.appendChild(use);
+  tblHead.appendChild(useP);
+  tblHead.appendChild(win);
+  tbl.appendChild(tblHead);
+
+  let tblBody = document.createElement("tbody");
+  let table = document.getElementById("table");
+  for (let l = 0; l < poke.length; l ++){
+    let row = table.insertRow(-1);
+
+    let cell1 = row.insertCell(0);
+    let cell2 = row.insertCell(1);
+    let cell3 = row.insertCell(2);
+    let cell4 = row.insertCell(3);
+
+    cell1.innerHTML = poke[l][0];
+    cell2.innerHTML = poke[l][1];
+    cell3.innerHTML = Math.round(poke[l][1] / (players1.length + players2.length) * 10000) / 100 + "%";
+    cell4.innerHTML = Math.round(poke[l][2] / poke[l][1] * 10000) / 100 + "%";
+  }
+
+  table = tbl;
+}
+
+function contains (arr, val, index) {
+  for (let i = 0; i < arr.length; i ++){
+    if (arr[i][index] == val) return i;
+  }
+  return -1;
+}
+
+function pushMon (poke, mon, player, win) {
+  let inArr = contains(poke, mon, 0);
+  let winR;
+
+  //push pokemon, usage, and win amount
+  if (player == "p1"){
+    if (win) winR = 1;
+    else winR = 0;
+  } else {
+    if (!win) winR = 1;
+    else winR = 0;
+  }
+
+  if (inArr == -1) poke.push([mon, 1, winR]);
+  else {
+    poke[inArr][1] ++;
+    poke[inArr][2] += winR;
+  }
 }
