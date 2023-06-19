@@ -199,7 +199,7 @@ function arrTotal (arr) {
 
 function setTable (poke, players1, players2, id) {
   for (let k = 0; k < players1.length; k ++){
-    document.getElementById('list').innerHTML += players1[k] + " VS. " + players2[k] + <br>";
+    document.getElementById('list').innerHTML += players1[k] + " VS. " + players2[k] + "<br>";
   }
 
   //create usage table
