@@ -22,6 +22,7 @@ function calcPreview (fileList){
   let poke = [];
   let usage = [];
   let id;
+  let filename;
 
   const fr = new FileReader();
   function readFile(i) {
@@ -38,6 +39,8 @@ function calcPreview (fileList){
 	  //find id of battle
 	  let j = contents.indexOf("t:|");
 	  id = contents.substring(j + 3, + content.indexOf("\n", j));
+	  filename = e.value;
+	  console.log("file " + filename + ": " + id);
 
       //find player1 and player2
       j = contents.indexOf("p1|");
@@ -194,9 +197,9 @@ function arrTotal (arr) {
   return result;
 }
 
-function setTable (poke, players1, players2) {
+function setTable (poke, players1, players2, id) {
   for (let k = 0; k < players1.length; k ++){
-    document.getElementById('list').innerHTML += players1[k] + " VS. " + players2[k] + "(battle ID " + id + ")" + <br>";
+    document.getElementById('list').innerHTML += players1[k] + " VS. " + players2[k] + <br>";
   }
 
   //create usage table
