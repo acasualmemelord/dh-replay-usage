@@ -21,6 +21,7 @@ function calcPreview (fileList){
   let players2 = [];
   let poke = [];
   let usage = [];
+  let id;
 
   const fr = new FileReader();
   function readFile(i) {
@@ -33,12 +34,18 @@ function calcPreview (fileList){
     let file = fileList[i];
     fr.onload = function(e) {
       let contents = e.target.result;
+	  
+	  //find id of battle
+	  let j = contents.indexOf("t:|");
+	  id = contents.substring(j + 3, + content.indexOf("\n", j));
 
       //find player1 and player2
-      let j = contents.indexOf("p1");
+      j = contents.indexOf("p1|");
       p1 = contents.substring(j + 3, contents.indexOf("|", j + 4));
-      j = contents.indexOf("p2");
+      console.log(p1);
+      j = contents.indexOf("p2|");
       p2 = contents.substring(j + 3, contents.indexOf("|", j + 4));
+      console.log(p2);
 
       //determine who won
       j = contents.indexOf("win|");
@@ -171,7 +178,7 @@ function calcNoPreview (fileList){
 
 function removeOne(arr, mon) {
   let i = contains(arr, mon, 0);
-  console.log(mon + " " + i + " " + arr[i]);
+  //console.log(mon + " " + i + " " + arr[i]);
   if(arr[i][1] == 1) {
     arr.splice(i, 1);
   }
@@ -189,7 +196,7 @@ function arrTotal (arr) {
 
 function setTable (poke, players1, players2) {
   for (let k = 0; k < players1.length; k ++){
-    document.getElementById('list').innerHTML += players1[k] + " VS. " + players2[k] + "<br>";
+    document.getElementById('list').innerHTML += players1[k] + " VS. " + players2[k] + "(battle ID " + id + ")" + <br>";
   }
 
   //create usage table
