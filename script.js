@@ -38,7 +38,7 @@ function calcPreview (fileList){
 	  //find id of battle
 	  let j = contents.indexOf("t:|");
 	  id = contents.substring(j + 3, + contents.indexOf("\n", j));
-	  console.log("file " + file.value + ": " + id);
+	  console.log("file " + e.target.value + ": " + id);
 
       //find player1 and player2
       j = contents.indexOf("p1|");
