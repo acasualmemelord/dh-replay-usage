@@ -1,7 +1,7 @@
 const radioButtons = document.querySelectorAll('input[name="size"]');
 
 function submit(fileList) {
-  document.getElementById('list').innerHTML = "<h3>REPLAYS USED:</h3><br>";
+  document.getElementById('list').innerHTML = "<h3>REPLAYS USED:</h3><br>" + "";
   document.getElementById("table").innerHTML = "<th>Pokemon</th><th>Use</th><th>Usage %</th><th>Winrate %</th>";
   let teamPreview;
   for (const radioButton of radioButtons) {
