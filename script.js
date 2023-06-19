@@ -22,7 +22,6 @@ function calcPreview (fileList){
   let poke = [];
   let usage = [];
   let id;
-  let filename;
 
   const fr = new FileReader();
   function readFile(i) {
@@ -39,16 +38,15 @@ function calcPreview (fileList){
 	  //find id of battle
 	  let j = contents.indexOf("t:|");
 	  id = contents.substring(j + 3, + contents.indexOf("\n", j));
-	  filename = e.value;
-	  console.log("file " + filename + ": " + id);
+	  console.log("file " + file.value + ": " + id);
 
       //find player1 and player2
       j = contents.indexOf("p1|");
       p1 = contents.substring(j + 3, contents.indexOf("|", j + 4));
-      console.log(p1);
+      //console.log(p1);
       j = contents.indexOf("p2|");
       p2 = contents.substring(j + 3, contents.indexOf("|", j + 4));
-      console.log(p2);
+      //console.log(p2);
 
       //determine who won
       j = contents.indexOf("win|");
